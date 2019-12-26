@@ -95,3 +95,4 @@ Method: GET
 Url: http://localhost:3000/
 
 The system doesn't deal with situations when a city is visited more than once, and with situations where the cards in the stack don't represent a linear sequence.
+

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <title>Сортировщик карточек путешественника</title>
+  <meta charset="utf-8">
+  <style>
+    body {
+      background-color: linen;
+      font-family: "arial", "sans-serif"
+    }
+
+    h1 {
+      color: maroon;
+      text-align: center;
+    }
+    
+    #form {
+      width: 500px;
+      height: 200px;
+      border: 1px solid #73AD21;
+    }
+
+    .box {
+      margin-top: 10px;
+      margin-left: 10px;
+      background-color: #cccccc;
+      color: #000000;
+      padding: 9px;
+    }
+    #typeOfTransport {
+      height: 40px;
+    }
+    #trip {
+      height: 23px;
+    }
+    
+    
+    #stack {
+    
+    }
+    
+  </style>
+</head>
+
+<body>
+  <!-- Traveler Card Sorter -->
+  <h1>Сортировщик карточек путешественника</h1>
+  <!-- It is necessary to add a stack of boarding cards. They will be sorted by the system. -->
+  <p>Необходимо добавить стопку посадочных карт. Они будут отсортированы по системе.</p>
+
+  <div id="form">
+    <form>
+      <div id="typeOfTransport" class="box">
+        <!-- type of transport -->
+        вид транспорта: 
+        <select name="type">
+          <option value="bus">автобус</option>
+          <option value="airplane">самолёт</option>
+          <option value="train">поезд</option>
+          <option value="ferry">паром</option>
+          <option value="other">другой</option>
+        </select>
+        <div id="specify_other_type" style="display:none">тип: <input other_type="from" type="text"></div>
+      </div>
+      <div id="trip" class="box">
+        из: <input name="from" type="text">      
+        в: <input name="from" type="text">
+      </div>
+    </form>
+  </div>
+
+  <div id="stack">
+  
+  </div>
+</body>
+
+</html>

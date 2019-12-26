@@ -1,0 +1,107 @@
+
+===============
+UNSORTED JSON
+===============
+
+    Berlin   ->  Roma (train)
+    Praga    ->  London (airplane)
+    Paris    ->  Berlin (bus)
+    Sochi    ->  Adler (uber)
+    London   ->  Istanbul (airplane)
+    Istanbul ->  Sochi (ferry)
+    Roma     ->  Praga (train)
+
+
+[
+  {
+    "departure" : "Berlin",
+    "destination" : "Roma",
+    "baggage" : "",
+    "transport" : {
+      "type" : "train",
+      "departure_point" : "Platform C3",
+      "arrival_point" : "",
+      "flight_wagon_ferry__number" : "Wagon 5",
+      "seat" : "34"
+    },
+    "general_information" : ""
+  },
+  {
+    "departure" : "Praga",
+    "destination" : "London",
+    "baggage" : "Baggage drop at ticket counter 344",
+    "transport" : {
+      "type" : "airplane",
+      "departure_point" : "Gate 22",
+      "arrival_point" : "",
+      "flight_wagon_ferry__number" : "LN357",
+      "seat" : "45C"
+    },
+    "general_information" : ""
+  },
+  {
+    "departure" : "Paris",
+    "destination" : "Berlin",
+    "baggage" : "",
+    "transport" : {
+      "type" : "bus",
+      "departure_point" : "Bus station - Platform 7",
+      "arrival_point" : "",
+      "flight_wagon_ferry__number" : "9A",
+      "seat" : "23"
+    },
+    "general_information" : ""
+  },
+  {
+    "departure" : "Sochi",
+    "destination" : "Adler",
+    "baggage" : "",
+    "transport" : {
+      "type" : "uber",
+      "departure_point" : "Port",
+      "arrival_point" : "",
+      "flight_wagon_ferry__number" : "license plate y859ab75",
+      "seat" : ""
+    },
+    "general_information" : ""
+  },
+  {
+    "departure" : "London",
+    "destination" : "Istanbul",
+    "baggage" : "Baggage will be automatically transferred from your last leg",
+    "transport" : {
+      "type" : "airplane",
+      "departure_point" : "Gate 15B",
+      "arrival_point" : "",
+      "flight_wagon_ferry__number" : "IST15",
+      "seat" : "27B"
+    },
+    "general_information" : ""
+  },
+  {
+    "departure" : "Istanbul",
+    "destination" : "Sochi",
+    "baggage" : "",
+    "transport" : {
+      "type" : "ferry",
+      "departure_point" : "Pier 3",
+      "arrival_point" : "",
+      "flight_wagon_ferry__number" : "SH3",
+      "seat" : "No seat assignment"
+    },
+    "general_information" : ""
+  },
+  {
+    "departure" : "Roma",
+    "destination" : "Praga",
+    "baggage" : "",
+    "transport" : {
+      "type" : "train",
+      "departure_point" : "Platform D",
+      "arrival_point" : "",
+      "flight_wagon_ferry__number" : "Wagon 1",
+      "seat" : "12"
+    },
+    "general_information" : ""
+  }
+]

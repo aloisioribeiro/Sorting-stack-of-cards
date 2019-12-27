@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <title>Сортировщик карточек путешественника</title>
+  <meta charset="utf-8">
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .box {
+      float: left;
+      width: 50%;
+      padding: 10px;
+    }
+
+    .clearfix::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+  
+    #input {
+      background-color: #bbb;
+    }
+  
+    #output {
+      background-color: #ccc;
+    }
+  </style>
+</head>
+
+<body onload="fAddInputExample()">
+
+<div>
+  <!-- Traveler Card Sorter -->
+  <h1>Сортировщик карточек путешественника</h1>
+</div>
+
+<div class="clearfix">
+  <div id="input" class="box">
+    <!-- It is necessary to add a stack of boarding cards. They will be sorted by the system. -->
+    <p>Необходимо добавить стопку посадочных карт. Они будут отсортированы по системе.</p>
+    <textarea id="inputTextArea" rows="27" cols="92">[]</textarea>
+    <button type="button" onclick="fSortStackOfCards()">Sort Stack of Cards</button>
+  </div>
+
+  <div id="output" class="box">
+    <p>Output</p>
+  </div>
+</div>
+
+
+
+
+
+<script>
+
+function fAddInputExample() {
+  let example = '[\n' +
+                '  {\n' +
+                '    "departure" : "Roma",\n' +
+                '    "destination" : "Praga",\n' +
+                '    "baggage" : "",\n' +
+                '    "transport" : {\n' +
+                '      "type" : "bus",\n' +
+                '      "departure_point" : "Bus station - Platform 7",\n' +
+                '      "arrival_point" : "",\n' +
+                '      "flight_wagon_ferry__number" : "9A",\n' +
+                '      "seat" : "23"\n' +
+                '    },\n' +
+                '    "general_information" : ""\n' +
+                '  },\n' +
+                '\n' +
+                '  {\n' +
+                '    "departure" : "Berlin",\n' +
+                '    "destination" : "Roma",\n' +
+                '    "baggage" : "",\n' +
+                '    "transport" : {\n' +
+                '      "type" : "train",\n' +
+                '      "departure_point" : "Platform C3",\n' +
+                '      "arrival_point" : "",\n' +
+                '      "flight_wagon_ferry__number" : "Wagon 5",\n' +
+                '      "seat" : "34"\n' +
+                '    },\n' +
+                '    "general_information" : ""\n' +
+                '  },\n' +
+                '\n' +
+                '  {\n' +
+                '    "departure" : "Praga",\n' +
+                '    "destination" : "London",\n' +
+                '    "baggage" : "Baggage drop at ticket counter 344",\n' +
+                '    "transport" : {\n' +
+                '      "type" : "airplane",\n' +
+                '      "departure_point" : "Gate 22",\n' +
+                '      "arrival_point" : "",\n' +
+                '      "flight_wagon_ferry__number" : "LN357",\n' +
+                '      "seat" : "45C"\n' +
+                '    },\n' +
+                '    "general_information" : ""\n' +
+                '  }\n' +
+                ']';
+
+  //document.getElementById("inputTextArea").value = JSON.stringify(example);
+  document.getElementById("inputTextArea").value = example;
+
+}
+
+function fSortStackOfCards() {
+  let stackCards = document.getElementById("inputTextArea").value;
+  let stack = JSON.parse(stackCards);
+
+  console.log(stack);
+
+  // auxiliar variables
+  let graph = {};          // graph structure that indicate the origin and destination of each card
+  let start_point = [];   // it will indicate the start point of the trip
+  let end_point = [];     // it will indicate the last arrive point of the trip
+  let error = false;      // in case of there are gaps in the sequence of cards, the value changes to true and the execution is stopped
+
+  // reading the stackOfCards to create the graph
+  for (let i = 0; i < stack.length; ++i) {
+    // => analizing the departure point of the card
+
+    //console.log("\ngraph[stack[i].departure]:");
+    //console.log(graph[stack[i].departure]);
+    // = when the departure point was not included yet, execute normal inclusion
+    if (graph[stack[i].departure] == undefined) {
+      // add a departure place;
+      graph[stack[i].departure] = {start: null, end: false, from: null, to: stack[i].destination,
+           baggage_to: stack[i].baggage, transport_to: stack[i].transport, general_information_to: stack[i].general_information};
+      // this departure point is a possible beginning for the trip
+      start_point.push( stack[i].departure );
+
+      // -> analizing the destination point of the card
+
+      // - when the destination point was not included yet, execute normal inclusion
+      if (graph[stack[i].destination] == undefined) {
+        // add a destination place;
+        graph[stack[i].destination] = {start: false, end: null, from: stack[i].departure, to: null};
+        // this destination point is a possible ending for the trip
+        end_point.push( stack[i].destination );
+      }
+
+      // - if the destination point of the card already exists, created as a departure point
+      // it cannot be a possible ending of the trip.
+      else if (graph[stack[i].destination].start == null  &&  graph[stack[i].destination].end == false) {
+        graph[stack[i].destination].start = false;
+        graph[stack[i].destination].from = stack[i].departure;
+        
+        // this destination point is also a departure point (in another card) and cannot be the trip beginning
+        let position = start_point.indexOf(stack[i].destination);
+        if (position != -1) {   // if this destination was already added to possible begin, it must be removed
+          start_point.splice(position, 1);
+        }
+        // this destination point is also a departure point (in another card) and cannot be the trip ending
+        position = end_point.indexOf(stack[i].destination);
+        if (end_point.indexOf(stack[i].destination) != -1) {   // if this departure_point was already added to possible begin, it must be removed
+          end_point.splice(position, 1);
+        }
+      }
+      
+      // - if the destination point of the card already exists, created as a destination point,
+      // there is a loop in the cards, that is not treated at the moment without date/time
+      // information about the departures and arrives
+      else {
+        error = true;
+        break;
+      }
+    }
+
+    
+    // => continue analizing the departure point of the card
+    
+    // = if the departure point of the card already exists, created as a destination point
+    else if (graph[stack[i].departure].start == false  &&  graph[stack[i].departure].end == null) {
+      graph[stack[i].departure].to = stack[i].destination;
+      graph[stack[i].departure].end = false;      
+      graph[stack[i].departure].baggage_to = stack[i].baggage;
+      graph[stack[i].departure].transport_to = stack[i].transport;
+      graph[stack[i].departure].general_information_to = stack[i].general_information;
+
+      // this departure point is also a destination point (in another card) and cannot be the trip beggining
+      let position = start_point.indexOf(stack[i].departure);
+      if (position != -1) {   // if this departure_point was already added to possible begin, it must be removed
+        start_point.splice(position, 1);
+      }
+      // this departure point is also a destination point (in another card) and cannot be the trip ending
+      position = end_point.indexOf(stack[i].departure);
+      if (end_point.indexOf(stack[i].departure) != -1) {   // if this departure_point was already added to possible begin, it must be removed
+        end_point.splice(position, 1);
+      }
+
+      
+
+      // -> analizing the destination point of the card
+      // - when the destination point was not included yet, execute normal inclusion
+      if (graph[stack[i].destination] == undefined) {
+        // add a destination place;
+        graph[stack[i].destination] = {start: false, end: null, from: stack[i].departure, to: null};
+        // this destination point is a possible ending for the trip
+        end_point.push( stack[i].destination );
+      }
+
+      // - if the destination point of the card already exists, created as a departure point
+      // it cannot be a possible ending of the trip.
+      else if (graph[stack[i].destination].start == null  &&  graph[stack[i].destination].end == false) {
+        graph[stack[i].destination].start = false;
+        graph[stack[i].destination].from = stack[i].departure;
+        
+        // this destination point is also a departure point (in another card) and cannot be the trip beginning
+        let position = start_point.indexOf(stack[i].destination);
+        if (position != -1) {   // if this destination was already added to possible begin, it must be removed
+          start_point.splice(position, 1);
+        }
+        // this destination point is also a departure point (in another card) and cannot be the trip ending
+        position = end_point.indexOf(stack[i].destination);
+        if (end_point.indexOf(stack[i].destination) != -1) {   // if this departure_point was already added to possible begin, it must be removed
+          end_point.splice(position, 1);
+        }
+      }
+
+      // - if the destination point of the card already exists, created as a destination point,
+      // there is a loop in the cards, that is not treated at the moment without date/time
+      // information about the departures and arrives
+      else {
+        error = true;
+        break;
+      }
+
+      
+    }
+    
+    // - if the departure point of the card already exists, created as a departure point,
+    // there is a loop in the cards, that is not treated at the moment without date/time
+    // information about the departures and arrives
+    else {
+      error = true;
+      break;
+    }
+  }  
+ 
+  if (error == true) {
+    fDisplayError();  
+  }
+  else {
+    let description = '';
+    fDisplayOutput(description, graph, start_point[0], end_point[0]);
+  }
+}
+
+function fDisplayError() {
+  document.getElementById("output").innerHTML = "<p>the card list is not a valid sequence</p>";
+}
+
+function fDisplayOutput(description, graph, start_point, end_point) {
+  console.log("\nfDisplayOutput");
+  console.log(start_point);
+  console.log(end_point);
+
+  // BUS
+  if (graph[start_point].transport_to.type == "bus") {
+    description += "<br><br>Take the bus";
+    if (graph[start_point].transport_to.flight_wagon_ferry__number != "") {
+      description += " " + graph[start_point].transport_to.flight_wagon_ferry__number;
+    }
+    if (graph[start_point].transport_to.departure_point != "") {
+      description += ", at " + graph[start_point].transport_to.departure_point;
+    }
+    description += ", from " + start_point + " to " + graph[start_point].to + ".";
+    if (graph[start_point].transport_to.seat != "") {
+      description += " Seat number " + graph[start_point].transport_to.seat + ".";
+    }
+    if (graph[start_point].baggage_to != "") {
+      description += " " + graph[start_point].baggage_to + ".";
+    }
+  }
+  
+  // AIRPLANE
+  else if (graph[start_point].transport_to.type == "airplane") {
+    description += "<br><br>From " + start_point + " airport, take flight " + graph[start_point].transport_to.flight_wagon_ferry__number +
+                   " to " + graph[start_point].to + ". Seat number " + graph[start_point].transport_to.seat + ". " +
+                   graph[start_point].baggage_to + ".";
+  }
+  
+  // TRAIN
+  else if (graph[start_point].transport_to.type == "train") {
+    description += "<br><br>Take train";
+    if (graph[start_point].transport_to.flight_wagon_ferry__number != "") {
+      description += " " + graph[start_point].transport_to.flight_wagon_ferry__number;
+    }
+    if (graph[start_point].transport_to.departure_point != "") {
+      description += ", at " + graph[start_point].transport_to.departure_point;
+    }
+    description += ", from " + start_point + " to " + graph[start_point].to + ".";
+    if (graph[start_point].transport_to.seat != "") {
+      description += " Seat number " + graph[start_point].transport_to.seat+ ".";
+    }
+    if (graph[start_point].baggage_to != "") {
+      description += " " + graph[start_point].baggage_to + ".";
+    }
+  }
+  
+  // FERRY
+  else if (graph[start_point].transport_to.type == "ferry") {
+    description += "<br><br>Take ferry";
+    if (graph[start_point].transport_to.flight_wagon_ferry__number != "") {
+      description += " " + graph[start_point].transport_to.flight_wagon_ferry__number;
+    }
+    if (graph[start_point].transport_to.departure_point != "") {
+      description += ", at " + graph[start_point].transport_to.departure_point;
+    }
+    description += ", from " + start_point + " to " + graph[start_point].to + ".";
+    if (graph[start_point].transport_to.seat != "") {
+      description += " Seat number " + graph[start_point].transport_to.seat + ".";
+    }
+    if (graph[start_point].baggage_to != "") {
+      description += " " + graph[start_point].baggage_to + ".";
+    }
+  }
+  
+  // OTHER TRANSPORT TYPE
+  else {
+    if (graph[start_point].transport_to.type != "") {
+      description += "<br><br>Take " + graph[start_point].transport_to.type;
+    }
+    if (graph[start_point].transport_to.flight_wagon_ferry__number != "") {
+      description += " " + graph[start_point].transport_to.flight_wagon_ferry__number;
+    }
+    if (graph[start_point].transport_to.departure_point != "") {
+      description += ", at " + graph[start_point].transport_to.departure_point;
+    }
+    description += ", from " + start_point + " to " + graph[start_point].to + ".";
+    if (graph[start_point].transport_to.seat != "") {
+      description += " Seat number " + graph[start_point].transport_to.seat + ".";
+    }
+    if (graph[start_point].baggage_to != "") {
+      description += " " + graph[start_point].baggage_to + ".";
+    }
+  }
+
+  let string1 = graph[start_point].to;
+  let string2 = end_point;
+  
+  if (string1  ==  string2) {
+    // the stack of cards is completed
+    document.getElementById("output").innerHTML = description;
+  }
+  else {
+    // move to read the next card
+    fDisplayOutput(description, graph, graph[start_point].to, end_point);
+  }
+  
+}
+
+</script>
+
+</body>
+
+</html>

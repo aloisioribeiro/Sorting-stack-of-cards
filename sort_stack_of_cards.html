@@ -112,8 +112,6 @@ function fSortStackOfCards() {
   let stackCards = document.getElementById("inputTextArea").value;
   let stack = JSON.parse(stackCards);
 
-  console.log(stack);
-
   // auxiliar variables
   let graph = {};          // graph structure that indicate the origin and destination of each card
   let start_point = [];   // it will indicate the start point of the trip
@@ -124,8 +122,6 @@ function fSortStackOfCards() {
   for (let i = 0; i < stack.length; ++i) {
     // => analizing the departure point of the card
 
-    //console.log("\ngraph[stack[i].departure]:");
-    //console.log(graph[stack[i].departure]);
     // = when the departure point was not included yet, execute normal inclusion
     if (graph[stack[i].departure] == undefined) {
       // add a departure place;
@@ -241,9 +237,9 @@ function fSortStackOfCards() {
       break;
     }
   }  
- 
-  if (error == true) {
-    fDisplayError();  
+
+  if (error == true  ||  start_point.length > 1  ||  end_point.length > 1) {
+    fDisplayError();
   }
   else {
     let description = '';
@@ -256,9 +252,6 @@ function fDisplayError() {
 }
 
 function fDisplayOutput(description, graph, start_point, end_point) {
-  console.log("\nfDisplayOutput");
-  console.log(start_point);
-  console.log(end_point);
 
   // BUS
   if (graph[start_point].transport_to.type == "bus") {

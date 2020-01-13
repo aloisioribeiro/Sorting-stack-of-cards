@@ -70,6 +70,7 @@ function createStructure(stack, callbackSorted) {
   let error_loop = false;
   
   for (let i = 0; i < stack.length; ++i) {
+
     // => analizing the departure point of the card
 
     // = when the departure point was not included yet, execute normal inclusion
@@ -187,7 +188,12 @@ function createStructure(stack, callbackSorted) {
       break;
     }
   }
-  callbackSorted(error_loop, {"graph": response, "start_point": start_point, "end_point": end_point});
+  if (start_point.length > 1 || end_point.length > 1) {
+    callbackSorted({error:"not_sequence"}, null);
+  }
+  else {
+    callbackSorted(error_loop, {"graph": response, "start_point": start_point, "end_point": end_point});
+  }
 }
 
 
@@ -195,10 +201,6 @@ function createStructure(stack, callbackSorted) {
 
 exports.sortCards = function (stackStructure, callback) {
   let description = '';
-
-  //console.log();
-  //console.log(stackStructure);
-  //console.log();
   // Describing the trip:
 
   //   stackStructure = {

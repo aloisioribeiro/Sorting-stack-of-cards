@@ -29,10 +29,10 @@
       padding: 9px;
     }
     #typeOfTransport {
-      height: 40px;
+      height: 60px;
     }
     #trip {
-      height: 23px;
+      height: 34px;
     }
     
     
@@ -54,14 +54,17 @@
       <div id="typeOfTransport" class="box">
         <!-- type of transport -->
         вид транспорта: 
-        <select name="type">
+        <select id="type_of_transport" name="type" onchange="fChangedTypeOfTransport()">
           <option value="bus">автобус</option>
           <option value="airplane">самолёт</option>
           <option value="train">поезд</option>
           <option value="ferry">паром</option>
           <option value="other">другой</option>
         </select>
+        <span id="specify_other_type" style="display:none">тип: <input other_type="from" type="text"></span>
+        <!--
         <div id="specify_other_type" style="display:none">тип: <input other_type="from" type="text"></div>
+        -->
       </div>
       <div id="trip" class="box">
         из: <input name="from" type="text">      
@@ -73,6 +76,17 @@
   <div id="stack">
   
   </div>
+
+<script>
+function fChangedTypeOfTransport() {
+  let selectedValue = document.getElementById("type_of_transport").value;
+  if (selectedValue == "other") {
+    document.getElementById("specify_other_type").style.display = "block";
+  }
+  document.getElementById("stack").innerHTML = selectedValue;
+}
+</script>
+
 </body>
 
 </html>

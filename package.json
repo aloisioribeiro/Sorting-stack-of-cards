@@ -1,0 +1,20 @@
+{
+  "name": "sort-stack-of-cards",
+  "version": "1.0.0",
+  "description": "Sort a stack of cards for trips",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^25.1.0"
+  },
+  "keywords": [
+    "nodejs",
+    "javascript",
+    "graph_(discrete_mathematics)",
+    "sorting"
+  ],
+  "author": "Aloisio dos Santos Ribeiro"
+}

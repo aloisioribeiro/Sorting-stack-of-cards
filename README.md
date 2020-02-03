@@ -16,7 +16,6 @@ The prompt will show the message
 
 
 
-
 - ENDPOINT TO SORT STACK OF CARDS
 
 Method: POST
@@ -62,17 +61,17 @@ The folder "examples" contains a file ("input_example.txt") with a complete body
 
 - RESPONSE
 
-The response for the previous example will be:
+The response for the previous example could be:
 
 ----------
 
-Take the bus 9A, at Bus station - Platform 7, from Paris to Berlin. Seat number 23.
-Take train Wagon 5, at Platform C3, from Berlin to Roma. Seat number 34.
-Take train Wagon 1, at Platform D, from Roma to Praga. Seat number 12.
-From Praga airport, take flight LN357 to London. Seat number 45C. Baggage drop at ticket counter 344.
-From London airport, take flight IST15 to Istanbul. Seat number 27B. Baggage will be automatically transferred from your last leg.
-Take ferry SH3, at Pier 3, from Istanbul to Sochi. Seat number No seat assignment.
-Take uber license plate y859ab75, at Port, from Sochi to Adler.
+    Take the bus 9A, at Bus station - Platform 7, from Paris to Berlin. Seat number 23.
+    Take train Wagon 5, at Platform C3, from Berlin to Roma. Seat number 34.
+    Take train Wagon 1, at Platform D, from Roma to Praga. Seat number 12.
+    From Praga airport, take flight LN357 to London. Seat number 45C. Baggage drop at ticket counter 344.
+    From London airport, take flight IST15 to Istanbul. Seat number 27B. Baggage will be automatically transferred from your last leg.
+    Take ferry SH3, at Pier 3, from Istanbul to Sochi. Seat number No seat assignment.
+    Take uber license plate y859ab75, at Port, from Sochi to Adler.
 
 ----------
 
@@ -86,6 +85,20 @@ The sorting process is done by the use of a graph structure, and two auxiliar va
 
 
 
+- UNIT TESTING
+
+Unit tests are done using Jest, that is listed in package.json file, under "devDependencies". To install Jest, run
+
+> npm install
+
+and to execute Jest, run
+
+> npm test
+
+It will test the module that creates a graph structure and the module that display the description of the trip.
+
+
+
 
 - FUTURE IMPLEMENTATIONS
 
@@ -96,3 +109,4 @@ Url: http://localhost:3000/
 
 The system doesn't deal with situations when a city is visited more than once, and with situations where the cards in the stack don't represent a linear sequence.
 
+Development Integration Tests and End-to-End Tests.
